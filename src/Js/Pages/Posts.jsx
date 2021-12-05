@@ -3,6 +3,7 @@ import { Input } from "antd";
 import Modal from "Js/Components/Modal";
 import getPosts from "Js/Services/API/getPosts";
 import addPost from "Js/Services/API/addPost";
+import PostCard from "Js/Components/PostCard";
 
 const initialNewPostState = {
 	title: "",
@@ -11,7 +12,7 @@ const initialNewPostState = {
 
 const initialState = {
 	loading: false,
-	posts: {},
+	posts: null,
 	error: null,
 };
 
@@ -52,7 +53,7 @@ function reducer(state, action) {
 		case "addPost":
 			return {
 				...state,
-				posts: [...state.posts, action.payload],
+				posts: [action.payload, ...state.posts],
 			};
 		default:
 			return state;
@@ -61,6 +62,7 @@ function reducer(state, action) {
 
 export default function Posts() {
 	const [modalIsVisible, setModalIsVisible] = useState(false);
+	const [confirmLoading, setConfirmLoading] = useState(false);
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const [newPostState, newPostDispatch] = useReducer(
@@ -93,10 +95,12 @@ export default function Posts() {
 	};
 
 	const addNewPost = async () => {
+		setConfirmLoading(true);
 		const response = await addPost(newPostState.title, newPostState.body);
 		if (response.success) {
 			newPostDispatch({ type: "reset" });
 			dispatch({ type: "addPost", payload: response.post });
+			setConfirmLoading(false);
 			setModalIsVisible(false);
 		}
 	};
@@ -110,6 +114,10 @@ export default function Posts() {
 					className="input"
 					value={newPostState.body}
 				/>
+				{state.posts &&
+					state.posts.map((item) => (
+						<PostCard key={item.id} title={item.title} body={item.body} />
+					))}
 				<Modal
 					visible={modalIsVisible}
 					onCancel={cancelCreatePost}
@@ -117,6 +125,7 @@ export default function Posts() {
 					postTitle={newPostState.title}
 					postBody={newPostState.body}
 					onOk={addNewPost}
+					loading={confirmLoading}
 				/>
 			</div>
 		</div>

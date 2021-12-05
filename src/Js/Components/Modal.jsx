@@ -10,6 +10,7 @@ export default function Modal({
 	onOk,
 	onChange,
 	visible,
+	loading,
 }) {
 	return (
 		<AntdModal
@@ -20,6 +21,7 @@ export default function Modal({
 			okText="Post"
 			onCancel={onCancel}
 			onOk={onOk}
+			confirmLoading={loading}
 		>
 			<Input
 				placeholder="Title"
