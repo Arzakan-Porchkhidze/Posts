@@ -1,0 +1,24 @@
+.modal {
+	.ant-modal {
+		.ant-modal-content {
+			overflow: hidden;
+			border-radius: 6px;
+			.ant-modal-header {
+				.ant-modal-title {
+					font-weight: bold;
+				}
+			}
+			.ant-modal-body {
+				.textarea {
+					resize: none;
+				}
+			}
+			.ant-modal-footer {
+				padding: 10px 24px;
+				button {
+					font-weight: bold;
+				}
+			}
+		}
+	}
+}
