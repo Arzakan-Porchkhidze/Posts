@@ -3,7 +3,14 @@ import { Modal as AntdModal, Input } from "antd";
 
 const { TextArea } = Input;
 
-export default function Modal({ visible, onCancel, onOk, value }) {
+export default function Modal({
+	postBody,
+	postTitle,
+	onCancel,
+	onOk,
+	onChange,
+	visible,
+}) {
 	return (
 		<AntdModal
 			wrapClassName="modal"
@@ -14,7 +21,20 @@ export default function Modal({ visible, onCancel, onOk, value }) {
 			onCancel={onCancel}
 			onOk={onOk}
 		>
-			<TextArea rows={6} value={value} className="textarea" />
+			<Input
+				placeholder="Title"
+				className="input"
+				name="title"
+				value={postTitle}
+				onChange={onChange}
+			/>
+			<TextArea
+				rows={6}
+				value={postBody}
+				className="textarea"
+				name="body"
+				onChange={onChange}
+			/>
 		</AntdModal>
 	);
 }
