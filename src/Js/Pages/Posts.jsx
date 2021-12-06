@@ -1,70 +1,26 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { Input } from "antd";
 import Modal from "Js/Components/Modal";
-import getPosts from "Js/Services/API/getPosts";
-import addPost from "Js/Services/API/addPost";
+import { getPosts, addPostRequest } from "Js/Services/API/index";
 import PostCard from "Js/Components/PostCard";
-
-const initialNewPostState = {
-	title: "",
-	body: "",
-};
-
-const initialState = {
-	loading: false,
-	posts: null,
-	error: null,
-};
-
-function newPostReducer(state, action) {
-	switch (action.type) {
-		case "reset":
-			return {
-				title: "",
-				body: "",
-			};
-		default:
-			return {
-				...state,
-				[action.name]: action.value,
-			};
-	}
-}
-
-function reducer(state, action) {
-	switch (action.type) {
-		case "loading":
-			return {
-				...state,
-				loading: true,
-			};
-		case "fetchPostsSuccess":
-			return {
-				...state,
-				loading: false,
-				posts: action.payload,
-			};
-		case "fetchPostsFail":
-			return {
-				...state,
-				loading: false,
-				error: action.payload,
-			};
-		case "addPost":
-			return {
-				...state,
-				posts: [action.payload, ...state.posts],
-			};
-		default:
-			return state;
-	}
-}
+import { initialPostsState, postsReducer } from "Reducers/Posts/reducer";
+import {
+	fetchPostFail,
+	fetchPostSuccess,
+	fetchRequest,
+	addPost,
+} from "Reducers/Posts/actions";
+import { initialNewPostState, newPostReducer } from "Reducers/NewPost/reducer";
+import { createNewPost, resetState } from "Reducers/NewPost/actions";
 
 export default function Posts() {
 	const [modalIsVisible, setModalIsVisible] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [postsState, postsDispatch] = useReducer(
+		postsReducer,
+		initialPostsState
+	);
 	const [newPostState, newPostDispatch] = useReducer(
 		newPostReducer,
 		initialNewPostState
@@ -72,12 +28,12 @@ export default function Posts() {
 
 	useEffect(() => {
 		(async function () {
-			dispatch({ type: "loading" });
+			postsDispatch(fetchRequest());
 			const response = await getPosts();
 			if (response.success) {
-				dispatch({ type: "fetchPostsSuccess", payload: response.posts });
+				postsDispatch(fetchPostSuccess(response.posts));
 			} else {
-				dispatch({ type: "fetchPostsFail", payload: response.error });
+				postsDispatch(fetchPostFail(response.error));
 			}
 		})();
 	}, []);
@@ -91,15 +47,18 @@ export default function Posts() {
 	};
 
 	const onChange = (e) => {
-		newPostDispatch({ name: e.target.name, value: e.target.value });
+		newPostDispatch(createNewPost(e.target.name, e.target.value));
 	};
 
 	const addNewPost = async () => {
 		setConfirmLoading(true);
-		const response = await addPost(newPostState.title, newPostState.body);
+		const response = await addPostRequest(
+			newPostState.title,
+			newPostState.body
+		);
 		if (response.success) {
-			newPostDispatch({ type: "reset" });
-			dispatch({ type: "addPost", payload: response.post });
+			newPostDispatch(resetState());
+			postsDispatch(addPost(response.post));
 			setConfirmLoading(false);
 			setModalIsVisible(false);
 		}
@@ -114,8 +73,8 @@ export default function Posts() {
 					className="input"
 					value={newPostState.body}
 				/>
-				{state.posts &&
-					state.posts.map((item) => (
+				{postsState.posts &&
+					postsState.posts.map((item) => (
 						<PostCard key={item.id} title={item.title} body={item.body} />
 					))}
 				<Modal

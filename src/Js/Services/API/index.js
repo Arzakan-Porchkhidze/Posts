@@ -1,4 +1,20 @@
-const addPost = async (title, body) => {
+export const getPosts = async () => {
+	try {
+		const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+		const posts = await response.json();
+		return {
+			success: true,
+			posts,
+		};
+	} catch (error) {
+		return {
+			success: false,
+			error,
+		};
+	}
+};
+
+export const addPostRequest = async (title, body) => {
 	try {
 		const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
 			method: "POST",
@@ -23,5 +39,3 @@ const addPost = async (title, body) => {
 		};
 	}
 };
-
-export default addPost;
