@@ -8,7 +8,8 @@ export default function Modal({
 	postTitle,
 	onCancel,
 	onOk,
-	onChange,
+	onChangeTitle,
+	onChangeBody,
 	visible,
 	loading,
 }) {
@@ -28,14 +29,14 @@ export default function Modal({
 				className="input"
 				name="title"
 				value={postTitle}
-				onChange={onChange}
+				onChange={onChangeTitle}
 			/>
 			<TextArea
 				rows={6}
 				value={postBody}
 				className="textarea"
 				name="body"
-				onChange={onChange}
+				onChange={onChangeBody}
 			/>
 		</AntdModal>
 	);

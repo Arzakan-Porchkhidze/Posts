@@ -10,20 +10,16 @@ import {
 	fetchRequest,
 	addPost,
 } from "Reducers/Posts/actions";
-import { initialNewPostState, newPostReducer } from "Reducers/NewPost/reducer";
-import { createNewPost, resetState } from "Reducers/NewPost/actions";
 
 export default function Posts() {
 	const [modalIsVisible, setModalIsVisible] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [newPostTitle, setNewPostTitle] = useState("");
+	const [newPostBody, setNewPostBody] = useState("");
 
 	const [postsState, postsDispatch] = useReducer(
 		postsReducer,
 		initialPostsState
-	);
-	const [newPostState, newPostDispatch] = useReducer(
-		newPostReducer,
-		initialNewPostState
 	);
 
 	useEffect(() => {
@@ -46,18 +42,12 @@ export default function Posts() {
 		setModalIsVisible(true);
 	};
 
-	const onChange = (e) => {
-		newPostDispatch(createNewPost(e.target.name, e.target.value));
-	};
-
 	const addNewPost = async () => {
 		setConfirmLoading(true);
-		const response = await addPostRequest(
-			newPostState.title,
-			newPostState.body
-		);
+		const response = await addPostRequest(newPostTitle, newPostBody);
 		if (response.success) {
-			newPostDispatch(resetState());
+			setNewPostBody("");
+			setNewPostTitle("");
 			postsDispatch(addPost(response.post));
 			setConfirmLoading(false);
 			setModalIsVisible(false);
@@ -71,7 +61,7 @@ export default function Posts() {
 					placeholder="Create your post"
 					onClick={openModal}
 					className="input"
-					value={newPostState.body}
+					value={newPostBody}
 				/>
 				{postsState.posts &&
 					postsState.posts.map((item) => (
@@ -80,9 +70,10 @@ export default function Posts() {
 				<Modal
 					visible={modalIsVisible}
 					onCancel={cancelCreatePost}
-					onChange={onChange}
-					postTitle={newPostState.title}
-					postBody={newPostState.body}
+					onChangeTitle={(e) => setNewPostTitle(e.target.value)}
+					onChangeBody={(e) => setNewPostBody(e.target.value)}
+					postTitle={newPostTitle}
+					postBody={newPostBody}
 					onOk={addNewPost}
 					loading={confirmLoading}
 				/>
