@@ -1,8 +1,9 @@
 import React, { useState, useReducer, useEffect } from "react";
+import "Posts/Index.scss";
 import { Input } from "antd";
-import Modal from "Js/Components/Modal";
-import { getPosts, addPostRequest } from "Js/Services/API/index";
-import PostCard from "Js/Components/PostCard";
+import PostFormModal from "Posts/PostFormModal/Index";
+import { getPosts, addPostRequest } from "Services/API/index";
+import PostCard from "Posts/PostCard/Index";
 import { initialPostsState, postsReducer } from "Reducers/Posts/reducer";
 import {
 	fetchPostFail,
@@ -67,7 +68,7 @@ export default function Posts() {
 					postsState.posts.map((item) => (
 						<PostCard key={item.id} title={item.title} body={item.body} />
 					))}
-				<Modal
+				<PostFormModal
 					visible={modalIsVisible}
 					onCancel={cancelCreatePost}
 					onChangeTitle={(e) => setNewPostTitle(e.target.value)}

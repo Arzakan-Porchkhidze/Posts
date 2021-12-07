@@ -1,4 +1,5 @@
 import React from "react";
+import "Posts/PostCard/Index.scss";
 import { Button } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 

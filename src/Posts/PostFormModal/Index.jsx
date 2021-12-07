@@ -1,9 +1,10 @@
 import React from "react";
+import "Posts/PostFormModal/Index.scss";
 import { Modal as AntdModal, Input } from "antd";
 
 const { TextArea } = Input;
 
-export default function Modal({
+export default function PostFormModal({
 	postBody,
 	postTitle,
 	onCancel,
@@ -15,7 +16,7 @@ export default function Modal({
 }) {
 	return (
 		<AntdModal
-			wrapClassName="modal"
+			wrapClassName="post-form-modal"
 			title="Create your post"
 			style={{ top: 100 }}
 			visible={visible}

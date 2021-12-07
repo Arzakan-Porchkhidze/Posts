@@ -1,5 +1,5 @@
 import React from "react";
-import Posts from "Js/Pages/Posts";
+import Posts from "Posts/Index";
 
 function App() {
 	return (
