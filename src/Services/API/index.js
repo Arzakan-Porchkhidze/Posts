@@ -43,7 +43,7 @@ export const addPostRequest = async (title, body) => {
 export const editPostRequest = async (post) => {
   try {
     const response = await fetch(
-      "https://jsonplaceholder.typicode.com/posts/1",
+      `https://jsonplaceholder.typicode.com/posts/${post.id}`,
       {
         method: "PUT",
         body: JSON.stringify(post),
@@ -56,6 +56,25 @@ export const editPostRequest = async (post) => {
     return {
       success: true,
       editedPost,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
+};
+
+export const deletePostRequest = async (postId) => {
+  try {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/posts/${postId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    return {
+      success: true,
     };
   } catch (error) {
     return {

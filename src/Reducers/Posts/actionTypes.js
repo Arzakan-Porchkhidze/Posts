@@ -4,4 +4,5 @@ export const ActionTypes = {
   FETCH_POSTS_FAIL: "FETCH_POSTS_FAIL",
   ADD_POST: "ADD_POST",
   EDIT_POST: "EDIT_POST",
+  DELETE_POST: "DELETE_POST",
 };

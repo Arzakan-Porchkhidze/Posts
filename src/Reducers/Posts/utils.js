@@ -7,3 +7,8 @@ export const editPosts = (posts, post) => {
   }
   return posts;
 };
+
+export const deletePost = (posts, postId) => {
+  const newPosts = posts.filter((item) => item.id !== postId);
+  return newPosts;
+};

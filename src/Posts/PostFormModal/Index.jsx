@@ -1,6 +1,6 @@
 import React from "react";
 import "Posts/PostFormModal/Index.scss";
-import { Modal as AntdModal, Input } from "antd";
+import { Modal, Input } from "antd";
 
 const { TextArea } = Input;
 
@@ -17,7 +17,7 @@ export default function PostFormModal({
   okText,
 }) {
   return (
-    <AntdModal
+    <Modal
       wrapClassName="post-form-modal"
       title={title}
       style={{ top: 100 }}
@@ -41,6 +41,6 @@ export default function PostFormModal({
         name="body"
         onChange={onChangeBody}
       />
-    </AntdModal>
+    </Modal>
   );
 }

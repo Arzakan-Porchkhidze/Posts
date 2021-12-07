@@ -23,3 +23,8 @@ export const editPost = (post) => ({
   type: ActionTypes.EDIT_POST,
   payload: post,
 });
+
+export const deletePost = (postId) => ({
+  type: ActionTypes.DELETE_POST,
+  payload: postId,
+});
