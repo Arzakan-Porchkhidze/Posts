@@ -2,7 +2,7 @@ import React, { useState, useReducer, useEffect } from "react";
 import "Posts/Index.scss";
 import { Input } from "antd";
 import PostFormModal from "Posts/PostFormModal/Index";
-import { getPosts, addPostRequest } from "Services/API/index";
+import { getPostsRequest, addPostRequest } from "Services/API/index";
 import PostCard from "Posts/PostCard/Index";
 import { initialPostsState, postsReducer } from "Reducers/Posts/reducer";
 import {
@@ -13,7 +13,9 @@ import {
 } from "Reducers/Posts/actions";
 
 export default function Posts() {
-  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [createPostModalIsVisible, setCreatePostModalIsVisible] =
+    useState(false);
+
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostBody, setNewPostBody] = useState("");
@@ -26,7 +28,7 @@ export default function Posts() {
   useEffect(() => {
     (async function () {
       postsDispatch(fetchRequest());
-      const response = await getPosts();
+      const response = await getPostsRequest();
       if (response.success) {
         postsDispatch(fetchPostSuccess(response.posts));
       } else {
@@ -36,11 +38,11 @@ export default function Posts() {
   }, []);
 
   const cancelCreatePost = () => {
-    setModalIsVisible(false);
+    setCreatePostModalIsVisible(false);
   };
 
-  const openModal = () => {
-    setModalIsVisible(true);
+  const openCreatePostModal = () => {
+    setCreatePostModalIsVisible(true);
   };
 
   const addNewPost = async () => {
@@ -51,7 +53,7 @@ export default function Posts() {
       setNewPostTitle("");
       postsDispatch(addPost(response.post));
       setConfirmLoading(false);
-      setModalIsVisible(false);
+      setCreatePostModalIsVisible(false);
     }
   };
 
@@ -60,16 +62,23 @@ export default function Posts() {
       <div className="content">
         <Input
           placeholder="Create your post"
-          onClick={openModal}
+          onClick={openCreatePostModal}
           className="input"
           value={newPostBody}
         />
         {postsState.posts &&
           postsState.posts.map((item) => (
-            <PostCard key={item.id} title={item.title} body={item.body} />
+            <PostCard
+              key={item.id}
+              id={item.id}
+              userId={item.userId}
+              title={item.title}
+              body={item.body}
+              postsDispatch={postsDispatch}
+            />
           ))}
         <PostFormModal
-          visible={modalIsVisible}
+          visible={createPostModalIsVisible}
           onCancel={cancelCreatePost}
           onChangeTitle={(e) => setNewPostTitle(e.target.value)}
           onChangeBody={(e) => setNewPostBody(e.target.value)}
@@ -77,6 +86,8 @@ export default function Posts() {
           postBody={newPostBody}
           onOk={addNewPost}
           loading={confirmLoading}
+          title="Create your post"
+          okText="Post"
         />
       </div>
     </div>

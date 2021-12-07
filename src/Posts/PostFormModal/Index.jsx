@@ -13,14 +13,16 @@ export default function PostFormModal({
   onChangeBody,
   visible,
   loading,
+  title,
+  okText,
 }) {
   return (
     <AntdModal
       wrapClassName="post-form-modal"
-      title="Create your post"
+      title={title}
       style={{ top: 100 }}
       visible={visible}
-      okText="Post"
+      okText={okText}
       onCancel={onCancel}
       onOk={onOk}
       confirmLoading={loading}

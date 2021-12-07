@@ -18,3 +18,8 @@ export const addPost = (post) => ({
   type: ActionTypes.ADD_POST,
   payload: post,
 });
+
+export const editPost = (post) => ({
+  type: ActionTypes.EDIT_POST,
+  payload: post,
+});

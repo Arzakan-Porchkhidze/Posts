@@ -1,4 +1,5 @@
 import { ActionTypes } from "Reducers/Posts/actionTypes";
+import { editPosts } from "./utils";
 
 export const initialPostsState = {
   loading: false,
@@ -29,6 +30,12 @@ export const postsReducer = (state, action) => {
       return {
         ...state,
         posts: [action.payload, ...state.posts],
+      };
+
+    case ActionTypes.EDIT_POST:
+      return {
+        ...state,
+        posts: editPosts(state.posts, action.payload),
       };
     default:
       return state;
