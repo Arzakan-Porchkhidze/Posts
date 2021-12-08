@@ -11,8 +11,6 @@ import {
 
 export default function PostCard({ id, userId, title, body, postsDispatch }) {
   const [editPostModalIsVisible, setEditPostModalIsVisible] = useState(false);
-  const [postBody, setPostBody] = useState(body);
-  const [postTitle, setPostTitle] = useState(title);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const cancelEditPost = () => {
@@ -66,12 +64,10 @@ export default function PostCard({ id, userId, title, body, postsDispatch }) {
 
       <PostFormModal
         visible={editPostModalIsVisible}
+        postTitle={title}
+        postBody={body}
         onCancel={cancelEditPost}
-        onChangeTitle={(e) => setPostTitle(e.target.value)}
-        onChangeBody={(e) => setPostBody(e.target.value)}
-        postTitle={postTitle}
-        postBody={postBody}
-        onOk={() => editPost({ id, userId, title: postTitle, body: postBody })}
+        onOk={({ title, body }) => editPost({ id, userId, title, body })}
         loading={confirmLoading}
         title="Edit post"
         okText="Edit"

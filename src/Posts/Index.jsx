@@ -18,7 +18,6 @@ export default function Posts() {
 
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
-  const [newPostBody, setNewPostBody] = useState("");
 
   const [postsState, postsDispatch] = useReducer(
     postsReducer,
@@ -37,19 +36,20 @@ export default function Posts() {
     })();
   }, []);
 
-  const cancelCreatePost = () => {
+  const cancelCreatePost = (title) => {
     setCreatePostModalIsVisible(false);
+    setNewPostTitle(title);
   };
 
   const openCreatePostModal = () => {
     setCreatePostModalIsVisible(true);
   };
 
-  const addNewPost = async () => {
+  const addNewPost = async ({ title, body }) => {
     setConfirmLoading(true);
-    const response = await addPostRequest(newPostTitle, newPostBody);
+    setNewPostTitle(title);
+    const response = await addPostRequest(title, body);
     if (response.success) {
-      setNewPostBody("");
       setNewPostTitle("");
       postsDispatch(addPost(response.post));
       setConfirmLoading(false);
@@ -64,7 +64,7 @@ export default function Posts() {
           placeholder="Create your post"
           onClick={openCreatePostModal}
           className="input"
-          value={newPostBody}
+          value={newPostTitle}
         />
         {postsState.posts &&
           postsState.posts.map((item) => (
@@ -80,10 +80,6 @@ export default function Posts() {
         <PostFormModal
           visible={createPostModalIsVisible}
           onCancel={cancelCreatePost}
-          onChangeTitle={(e) => setNewPostTitle(e.target.value)}
-          onChangeBody={(e) => setNewPostBody(e.target.value)}
-          postTitle={newPostTitle}
-          postBody={newPostBody}
           onOk={addNewPost}
           loading={confirmLoading}
           title="Create your post"

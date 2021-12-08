@@ -1,6 +1,6 @@
 import React from "react";
 import "Posts/PostFormModal/Index.scss";
-import { Modal, Input } from "antd";
+import { Modal, Input, Form } from "antd";
 
 const { TextArea } = Input;
 
@@ -9,13 +9,18 @@ export default function PostFormModal({
   postTitle,
   onCancel,
   onOk,
-  onChangeTitle,
-  onChangeBody,
   visible,
   loading,
   title,
   okText,
 }) {
+  const [form] = Form.useForm();
+
+  const onFinish = (values) => {
+    onOk(values);
+    form.resetFields();
+  };
+
   return (
     <Modal
       wrapClassName="post-form-modal"
@@ -23,24 +28,39 @@ export default function PostFormModal({
       style={{ top: 100 }}
       visible={visible}
       okText={okText}
-      onCancel={onCancel}
-      onOk={onOk}
+      onCancel={() => onCancel(form.getFieldValue("title"))}
+      onOk={form.submit}
       confirmLoading={loading}
     >
-      <Input
-        placeholder="Title"
-        className="input"
-        name="title"
-        value={postTitle}
-        onChange={onChangeTitle}
-      />
-      <TextArea
-        rows={6}
-        value={postBody}
-        className="textarea"
-        name="body"
-        onChange={onChangeBody}
-      />
+      <Form
+        form={form}
+        onFinish={onFinish}
+        initialValues={{
+          title: postTitle,
+          body: postBody,
+        }}
+      >
+        <Form.Item
+          name="title"
+          rules={[
+            { required: true, message: "Please input your username!" },
+            { min: 5, message: "Username must be minimum 5 characters." },
+            { max: 50, message: "Username must be minimum 5 characters." },
+          ]}
+        >
+          <Input placeholder="Title" className="input" />
+        </Form.Item>
+        <Form.Item
+          name="body"
+          rules={[
+            { required: true, message: "Please input your username!" },
+            { min: 5, message: "Username must be minimum 5 characters." },
+            { max: 1000, message: "Username must be minimum 5 characters." },
+          ]}
+        >
+          <TextArea rows={6} placeholder="Body" className="textarea" />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }
